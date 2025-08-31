@@ -52,6 +52,9 @@ def demo_similarity(model_name: str):
 def demo_search(model_name: str, query: str, k: int):
     model = load_model(model_name)
     corpus = [
+        "What is my name",
+        "Suyash",
+        "Shukla",
         "Renew my Indian passport in Hyderabad.",
         "Best pizza places near Gachibowli.",
         "How to integrate Azure Key Vault with .NET?",
