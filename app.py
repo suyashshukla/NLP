@@ -1,6 +1,7 @@
 modelName = "thenlper/gte-small"
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, pipeline
 
 labels = [
     "Food",
@@ -14,7 +15,8 @@ labels = [
     "Dairy",
 ]
 
-def fetchExpenseCategory(expense_text: str):
+
+def fetchExpenseCategoryUsingEmbeddings(expense_text: str):
     model = SentenceTransformer(modelName, trust_remote_code=True)
     # Embed expense
     expense_emb = model.encode([expense_text], normalize_embeddings=True)
@@ -28,8 +30,18 @@ def fetchExpenseCategory(expense_text: str):
     return labels[best_idx], scores
 
 
-category, scores = fetchExpenseCategory("Milk, Bread and Butter")
-print(f"Category: {category}")
-print("Scores:")
-for label, score in zip(labels, scores):
-    print(f" - {label}: {score:.4f}")
+def fetchExpenseCategoryUsingBert(expense_text: str):
+    model_id = "MoritzLaurer/deberta-v3-base-mnli"
+    tok = AutoTokenizer.from_pretrained(model_id, use_fast=False)
+    classifier = pipeline("zero-shot-classification", model=model_id, tokenizer=tok)
+    result = classifier(expense_text, candidate_labels=labels)
+
+    print(result["labels"][0])
+
+
+print("Label using embeddings")
+category = fetchExpenseCategoryUsingEmbeddings("Loan EMI")
+print(category[0])
+print("Label using Bert")
+category = fetchExpenseCategoryUsingBert("Loan EMI")
+print(category)
