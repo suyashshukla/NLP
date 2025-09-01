@@ -1,5 +1,4 @@
 modelName = "thenlper/gte-small"
-from ast import List
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -15,8 +14,7 @@ labels = [
     "Dairy",
 ]
 
-
-def fetchCategory(expense_text: str):
+def fetchExpenseCategory(expense_text: str):
     model = SentenceTransformer(modelName, trust_remote_code=True)
     # Embed expense
     expense_emb = model.encode([expense_text], normalize_embeddings=True)
@@ -30,7 +28,7 @@ def fetchCategory(expense_text: str):
     return labels[best_idx], scores
 
 
-category, scores = fetchCategory("Milk, Bread and Butter")
+category, scores = fetchExpenseCategory("Milk, Bread and Butter")
 print(f"Category: {category}")
 print("Scores:")
 for label, score in zip(labels, scores):
