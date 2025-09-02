@@ -32,11 +32,10 @@ def fetchExpenseCategoryUsingEmbeddings(expense_text: str):
 
 def fetchExpenseCategoryUsingBert(expense_text: str):
     model_id = "MoritzLaurer/deberta-v3-base-mnli"
-    tok = AutoTokenizer.from_pretrained(model_id, use_fast=False)
-    classifier = pipeline("zero-shot-classification", model=model_id, tokenizer=tok)
+    classifier = pipeline("zero-shot-classification", model=model_id)
     result = classifier(expense_text, candidate_labels=labels)
 
-    print(result["labels"][0])
+    return result["labels"][0]
 
 
 print("Label using embeddings")
